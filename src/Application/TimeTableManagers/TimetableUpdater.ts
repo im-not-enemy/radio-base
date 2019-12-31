@@ -2,6 +2,7 @@ import TimeTable from './iTimetable'
 import Radiko from '../TapeRecorder/iRadiko'
 import moment from 'moment'
 import md5 from 'md5'
+import systemLogger from '../../Adapter/Logger'
 
 export default class TimetableUpdater {
     constructor(private timetable: TimeTable, private radiko: Radiko) { }
@@ -16,7 +17,7 @@ export default class TimetableUpdater {
         for (let i=0; i<7; i++){
             const date = parseInt(moment(new Date()).add(i, 'd').format('YYYYMMDD'))
             if (await this.timetable.countByDate(date) === 0) {
-                console.log(`${date} needs update.`)
+                systemLogger.debug(`番組表ダウンロード => ${date}`)
                 const programsRawInfo = await this.radiko.getProgramsRawInfoByDate(date)
                 programsRawInfo.radiko.stations[0].station.forEach((station: any) => {
                     station.progs.forEach((programs: any) => {
