@@ -31,14 +31,14 @@ app.use(express.json())
 
 app.get('/',(req,res)=>res.send('Hello world!'))
 
-app.get('/_search',async(req,res)=>{
+app.get('/timetable/_search',async(req,res)=>{
     const query = requestBodyParser.run(req.body)
     const option = requestQueryParser.run(req.query)
     const result = await timetable.find(query,option)
     res.send(result)
 })
 
-app.get('/:id',async(req,res)=>{
+app.get('/timetable/:id',async(req,res)=>{
     const option = requestQueryParser.run(req.query)
     const result = await timetable.findById(parseInt(req.params.id),option)
     result.length === 0
@@ -46,7 +46,7 @@ app.get('/:id',async(req,res)=>{
     : res.send(result)
 })
 
-app.post('/:id/_recording',async(req,res)=>{
+app.post('/timetable/:id/_recording',async(req,res)=>{
     const result = await recordingService.start(parseInt(req.params.id))
     if(result.succeed === true){
         res.sendStatus(200)
@@ -55,12 +55,12 @@ app.post('/:id/_recording',async(req,res)=>{
     }
 })
 
-app.delete('/:id/_recording',async(req,res)=>{
+app.delete('/timetable/:id/_recording',async(req,res)=>{
     recordingService.stop(parseInt(req.params.id))
     res.sendStatus(200)
 })
 
-app.post('/:id/_reservation',async(req,res)=>{
+app.post('/timetable/:id/_reservation',async(req,res)=>{
     const result = await reservationService.register(parseInt(req.params.id))
     if (result.succeed === true){
         res.sendStatus(200)
@@ -69,7 +69,7 @@ app.post('/:id/_reservation',async(req,res)=>{
     }
 })
 
-app.delete('/:id/_reservation',async(req,res)=>{
+app.delete('/timetable/:id/_reservation',async(req,res)=>{
     const result = await reservationService.cancel(parseInt(req.params.id))
     if (result.succeed === true){
         res.sendStatus(200)
