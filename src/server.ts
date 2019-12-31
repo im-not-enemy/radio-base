@@ -100,6 +100,8 @@ const everySixAm = () => {
     const timetableUpdater = new TimetableUpdater(timetable, radiko)
     timetableUpdater.run()
 }
+everySixAm()
+
 const everyMinutes = async():Promise<void> => {
     //DB検索: 録音中番組があるか > 録音中番組の放送終了時間は過ぎているか > ステータスをRECORDEDに変更
     const recordingPrograms = await timetable.findByStatus('RECORDING')
