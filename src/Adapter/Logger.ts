@@ -1,8 +1,8 @@
 import log4js from 'log4js'
 
 log4js.configure({
-//  appenders: { cheese: { type: 'file', filename: 'cheese.log' } },
-  appenders: { system: { type: 'console' } },
+  appenders: { system: { type: 'file', filename: './logs/radio-base.log' } },
+// appenders: { system: { type: 'console' } },
   categories: { default: { appenders: ['system'], level: 'trace' } }
 });
  
