@@ -2,3 +2,4 @@ database/
 lib/
 logs/
 out/
+node_modules/
