@@ -5,7 +5,7 @@ bluebird.promisifyAll(nedb.prototype)
 import iTimetable from '../Application/TimeTableManagers/iTimetable'
 
 const db = new nedb({
-    filename: './databse/timetable.db',
+    filename: './database/timetable.db',
     autoload: true
 })
 

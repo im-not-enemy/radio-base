@@ -5,7 +5,7 @@ bluebird.promisifyAll(nedb.prototype)
 import iScheduleNote from '../Application/ScheduleManagers/iScheduleNote'
 
 const db = new nedb({
-    filename: './databse/schedule.db',
+    filename: './database/schedule.db',
     autoload: true
 })
 
