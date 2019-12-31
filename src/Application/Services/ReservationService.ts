@@ -27,7 +27,7 @@ export default class ReservationService {
     public async register(id:number):Promise<{[key:string]:any}>{
         const source = await this.timetable.findById(id,{})
         const program = this.programBuilder.run(source[0])
-        const recordingBot = new RecordingBot(program,this.tapeRecorder)
+        const recordingBot = new RecordingBot(program)
         const reservationBot = new ReservationBot(program,this.nodeScheduler,recordingBot)
         const result = reservationBot.register()
         if (result.succeed === true){
