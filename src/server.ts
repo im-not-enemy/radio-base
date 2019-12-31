@@ -13,6 +13,7 @@ import ReservationService from './Application/Services/ReservationService'
 import RecordingService from './Application/Services/RecordingService'
 import TimetableUpdater from './Application/TimeTableManagers/TimetableUpdater'
 import systemLogger from './Adapter/Logger'
+import moment from 'moment'
 
 const requestQueryParser = new RequestQueryParser()
 const requestBodyParser = new RequestBodyParser()
@@ -30,6 +31,20 @@ const port = 3000
 app.use(express.json())
 
 app.get('/',(req,res)=>res.send('Hello world!'))
+
+app.get('/timetable',async(req,res)=>{
+    const now = moment(new Date()).format('YYYYMMDDHHmmss')
+    const option = requestQueryParser.run(req.query)
+    const result = await timetable.find({$not:{$and:[{endTime:{$lt:parseInt(now)}},{status:'DEFAULT'}]}},option)
+    res.send(result)
+})
+
+app.get('/timetable/nowOnAir',async(req,res)=>{
+    const now = moment(new Date()).format('YYYYMMDDHHmmss')
+    const option = requestQueryParser.run(req.query)
+    const result = await timetable.find({$and:[{startTime:{$lt:parseInt(now)}},{endTime:{$gt:parseInt(now)}}]},option)
+    res.send(result)
+})
 
 app.get('/timetable/_search',async(req,res)=>{
     const query = requestBodyParser.run(req.body)
