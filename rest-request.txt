@@ -1,0 +1,36 @@
+GET http://localhost:3000/
+GET http://localhost:3000/9510766732
+GET http://localhost:3000/9511097401?fields=id,title
+GET http://localhost:3000/951109740?fields=id,title
+
+GET http://localhost:3000/_search HTTP/1.1
+content-type: application/json
+
+{
+    "title": "ハッピー・ダイアリー"
+}
+
+GET http://localhost:3000/_search HTTP/1.1
+content-type: application/json
+
+{
+    "date": "1228"
+}
+
+POST http://localhost:3000/9510766732/_recording
+
+GET http://localhost:3000/9510298827
+
+POST http://localhost:3000/9511170883/_reservation
+
+POST http://localhost:3000/9510504661/_recording
+POST http://localhost:3000/9511039567/_recording
+POST http://localhost:3000/9511090618/_recording
+GET http://localhost:3000/9511090618
+POST http://localhost:3000/9511090618/_reservation
+
+
+
+// 9:55実行予定
+POST http://localhost:3000/9511091333/_reservation
+GET http://localhost:3000/9510750201
