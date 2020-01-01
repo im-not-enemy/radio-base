@@ -14,6 +14,7 @@ import RecordingService from './Application/Services/RecordingService'
 import TimetableUpdater from './Application/TimeTableManagers/TimetableUpdater'
 import systemLogger from './Adapter/Logger'
 import EnvironmentChecker from './Application/Server/EnvironmentChecker'
+import DirectoryMaker from './Application/Server/DirectoryMaker'
 import moment from 'moment'
 
 const requestQueryParser = new RequestQueryParser()
@@ -26,9 +27,11 @@ const timetableOverWriter = new TimetableOverWriter(timetable)
 const reservationService = new ReservationService(timetable,scheduleNote)
 const recordingService = new RecordingService(timetable)
 const environmentChecker = new EnvironmentChecker()
+const directoryMaker = new DirectoryMaker()
 
 const preCheckResult = environmentChecker.run()
 if (!preCheckResult.succeed) throw new Error(preCheckResult.reason)
+directoryMaker.run(Object.values(settings.directories))
 
 const app = express()
 const port = 3000

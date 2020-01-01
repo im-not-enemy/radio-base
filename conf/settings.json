@@ -1,4 +1,6 @@
 {
-    "outputDir": "./out",
-    "logDir": "./logs"
+    "directories": {
+        "outputDir": "./out",
+        "logDir": "./logs"
+    }
 }

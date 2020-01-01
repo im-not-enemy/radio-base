@@ -4,7 +4,7 @@ import FFmpeg from '../../Adapter/FFmpeg'
 import TapeRecorder from '../TapeRecorder/TapeRecorder'
 
 export default class RecordingBot {
-    private settings = require('../../../conf/settings.json')
+    private settings = require('../../../conf/settings.json').directories
     private radiko = new Radiko('JP11')
     private ffmpeg = new FFmpeg(this.radiko, this.settings.outputDir, this.settings.logDir)
     private tapeRecorder = new TapeRecorder(this.ffmpeg) 
