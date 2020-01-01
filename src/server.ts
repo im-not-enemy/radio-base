@@ -13,6 +13,7 @@ import ReservationService from './Application/Services/ReservationService'
 import RecordingService from './Application/Services/RecordingService'
 import TimetableUpdater from './Application/TimeTableManagers/TimetableUpdater'
 import systemLogger from './Adapter/Logger'
+import EnvironmentChecker from './Application/Server/EnvironmentChecker'
 import moment from 'moment'
 
 const requestQueryParser = new RequestQueryParser()
@@ -24,6 +25,10 @@ const radiko = new Radiko('JP11')
 const timetableOverWriter = new TimetableOverWriter(timetable)
 const reservationService = new ReservationService(timetable,scheduleNote)
 const recordingService = new RecordingService(timetable)
+const environmentChecker = new EnvironmentChecker()
+
+const preCheckResult = environmentChecker.run()
+if (!preCheckResult.succeed) throw new Error(preCheckResult.reason)
 
 const app = express()
 const port = 3000
