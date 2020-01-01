@@ -32,7 +32,7 @@ export default class ReservationService {
         const result = reservationBot.register()
         if (result.succeed === true){
             this.timetableOverWriter.run(id,{status:'RESERVED'})
-            systemLogger.debug(`予約録音完了 => id:${id}`)
+            systemLogger.debug(`予約登録完了 => id:${id}`)
         }
         return result
     }
