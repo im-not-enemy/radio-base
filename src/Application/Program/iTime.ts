@@ -1,6 +1,6 @@
 export default interface iTime {
     isPast():boolean
     calclateDuration():number
-    toObject():{[key:string]:string}
+    toObject():{[key:string]:number}
     toString():string
 }

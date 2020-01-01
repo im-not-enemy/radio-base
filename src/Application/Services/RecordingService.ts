@@ -22,7 +22,6 @@ export default class RecordingService {
             systemLogger.debug(`録音処理開始 => id:${id}`)
             this.timetableOverWriter.run(id,{status:'RECORDING'})
         }
-        //this.waitingRoom.push()
         this.waitingRoom.push({id: id,recordingBot: recordingBot})
         return result
     }
