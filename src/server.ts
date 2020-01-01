@@ -136,5 +136,5 @@ const everyMinutes = async():Promise<void> => {
     })
 }
 
-nodeScheduler.activate({hour:6},everySixAm)
+nodeScheduler.activate({hour:6,minute:0,second:0},everySixAm)
 nodeScheduler.activate({second:0},everyMinutes)
