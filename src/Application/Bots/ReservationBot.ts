@@ -1,18 +1,23 @@
 import Program from '../Program/iProgram'
-import RecoringBot from './iRecordingBots'
 import NodeScheduler from '../ScheduleManagers/iNodeScheduler'
+import Timetable from '../TimeTableManagers/iTimetable'
+import RecordingService from '../Services/RecordingService'
 
 export default class ReservationBot {
-    constructor(private program:Program, private nodeScheduler:NodeScheduler, private recordingBot?:RecoringBot){}
+    constructor(private program:Program, private nodeScheduler:NodeScheduler,private timetable:Timetable){}
 
     public register():{[key:string]:any}{
-        if (!this.recordingBot) return {succeed:false,reason:'RecordingBot required.'}
+        const requestRecording = () => {
+            const id = parseInt(this.program.toStringId())
+            const recordingService = new RecordingService(this.timetable)
+            recordingService.start(id)
+        }
         //開始可否判定
         const result = this.program.canStartReservation()
         if (result.succeed === false) return result
         //録音ジョブ登録
         const rule = this.program.toObjectStartTime()
-        const jobInfo = this.nodeScheduler.activate(rule,this.recordingBot.start,true)
+        const jobInfo = this.nodeScheduler.activate(rule,requestRecording,true)
         jobInfo.id = parseInt(this.program.toStringId())
         //録音ジョブ永続化
         this.nodeScheduler.persist(jobInfo)

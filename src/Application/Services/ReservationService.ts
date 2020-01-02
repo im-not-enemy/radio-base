@@ -25,25 +25,32 @@ export default class ReservationService {
     }
 
     public async register(id:number):Promise<{[key:string]:any}>{
+        systemLogger.info(`予約録音登録処理開始 => id:${id}`)
         const source = await this.timetable.findById(id,{})
         const program = this.programBuilder.run(source[0])
-        const recordingBot = new RecordingBot(program)
-        const reservationBot = new ReservationBot(program,this.nodeScheduler,recordingBot)
+        const reservationBot = new ReservationBot(program,this.nodeScheduler,this.timetable)
         const result = reservationBot.register()
         if (result.succeed === true){
             this.timetableOverWriter.run(id,{status:'RESERVED'})
-            systemLogger.debug(`予約登録完了 => id:${id}`)
+            systemLogger.info(`予約録音登録処理完了 => id:${id}`)
+        }
+        if (result.succeed === false){
+            systemLogger.error(`予約録音登録処理失敗 => id:${id}, reason:${result.reason}`)
         }
         return result
     }
     public async cancel(id:number):Promise<{[key:string]:any}>{
+        systemLogger.info(`予約録音取消処理開始 => id:${id}`)
         const source = await this.timetable.findById(id,{})
         const program = this.programBuilder.run(source[0])
-        const reservationBot = new ReservationBot(program,this.nodeScheduler)
+        const reservationBot = new ReservationBot(program,this.nodeScheduler,this.timetable)
         const result = reservationBot.cancel()
         if (result.succeed === true){
             this.timetableOverWriter.run(id,{status:'DEFAULT'})
-            systemLogger.debug(`予約抹消完了 => id:${id}`)
+            systemLogger.info(`予約録音取消処理完了 => id:${id}`)
+        }
+        if (result.succeed === false){
+            systemLogger.error(`予約録音取消処理失敗 => id:${id}, reason:${result.reason}`)
         }
         return result
     }

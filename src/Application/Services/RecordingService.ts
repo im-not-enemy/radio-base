@@ -14,23 +14,30 @@ export default class RecordingService {
     }
 
     public async start(id:number):Promise<{[key:string]:any}>{
+        systemLogger.info(`録音準備開始 => id:${id}`)
         const source = await this.timetable.findById(id,{})
         const program = this.programBuilder.run(source[0])
         const recordingBot = new RecordingBot(program)
         const result = await recordingBot.start()
         if (result.succeed === true){
-            systemLogger.debug(`録音処理開始 => id:${id}`)
             this.timetableOverWriter.run(id,{status:'RECORDING'})
+            systemLogger.info(`録音準備完了。録音開始 => id:${id}`)
+            this.waitingRoom.push({id: id,recordingBot: recordingBot})
         }
-        this.waitingRoom.push({id: id,recordingBot: recordingBot})
+        if (result.succeed === false){
+            systemLogger.error(`録音失敗 => id:${id}, reason:${result.reason}`)
+        }
         return result
     }
 
     public async stop(id:number){
+        systemLogger.info(`録音停止処理開始 => id:${id}`)
         this.waitingRoom.forEach((el)=>{
-            systemLogger.debug(`録音停止 => id:${id}`)
-            if(el.id === id) el.recordingBot.stop()
-            this.timetableOverWriter.run(id,{status:'DEFAULT'})
+            if(el.id === id){
+                el.recordingBot.stop()
+                this.timetableOverWriter.run(id,{status:'DEFAULT'})
+                systemLogger.info(`録音停止処理完了 => id:${id}`)
+            } 
         })
     }
 }

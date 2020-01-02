@@ -5,7 +5,7 @@ export default class Time implements iTime{
     private now:number = parseInt(moment(new Date()).format('YYYYMMDDHHmmss'))
     constructor(private time:number){}
     public isPast():boolean{
-        return (this.now > this.time)
+        return (this.now >= this.time)
     }
     public calclateDuration():number{
         return (this.time - this.now)
