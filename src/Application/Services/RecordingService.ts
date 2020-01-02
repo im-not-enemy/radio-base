@@ -35,7 +35,7 @@ export default class RecordingService {
         this.waitingRoom.forEach((el)=>{
             if(el.id === id){
                 el.recordingBot.stop()
-                this.timetableOverWriter.run(id,{status:'DEFAULT'})
+                this.timetableOverWriter.run(id,{status:'RECORDED'})
                 systemLogger.info(`録音停止処理完了 => id:${id}`)
             } 
         })
