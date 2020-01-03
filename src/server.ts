@@ -16,6 +16,7 @@ import systemLogger from './Adapter/Logger'
 import EnvironmentChecker from './Application/Server/EnvironmentChecker'
 import DirectoryMaker from './Application/Server/DirectoryMaker'
 import moment from 'moment'
+import cors from 'cors'
 
 const requestQueryParser = new RequestQueryParser()
 const requestBodyParser = new RequestBodyParser()
@@ -37,6 +38,7 @@ const app = express()
 const port = 3000
 
 app.use(express.json())
+app.use(cors())
 
 app.get('/',(req,res)=>res.send('Hello world!'))
 
