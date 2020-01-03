@@ -56,7 +56,7 @@ app.get('/timetable/nowOnAir',async(req,res)=>{
     res.send(result)
 })
 
-app.get('/timetable/_search',async(req,res)=>{
+app.post('/timetable/_search',async(req,res)=>{
     const query = requestBodyParser.run(req.body)
     const option = requestQueryParser.run(req.query)
     const result = await timetable.find(query,option)
