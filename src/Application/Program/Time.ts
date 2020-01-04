@@ -8,7 +8,12 @@ export default class Time implements iTime{
         return (this.now >= this.time)
     }
     public calclateDuration():number{
-        return (this.time - this.now)
+        const time = moment(this.parseDate(this.time))
+        const now = moment(this.parseDate(this.now))
+        return (time.diff(now)/1000)
+    }
+    private parseDate(date:number):string{
+        return `${String(date).substring(0,8)}T${String(date).substring(8,14)}`
     }
     public toObject():{[key:string]:number}{
         const formatedTime = moment(`${String(this.time).substr(0,8)}T${String(this.time).substr(8,6)}`)

@@ -1,6 +1,7 @@
 import fs from 'fs'
 import Radiko from '../Application/TapeRecorder/iRadiko'
 import iFFmpeg from '../Application/TapeRecorder/iFFmpeg'
+import systemLogger from './Logger'
 
 export default class FFmpeg implements iFFmpeg{
     constructor(private radiko:Radiko, private outputDir:string, private logDir:string){}
@@ -17,11 +18,13 @@ export default class FFmpeg implements iFFmpeg{
             '-loglevel', 'info',
             '-vn', output
         ]
+        systemLogger.trace(`ffmpeg実行準備 => options:${options}`)
         const ffmpeg = spawn('ffmpeg',options,{
             detached: true, 
             stdio: ['ignore','ignore',fs.openSync(`${log}`, 'a')] 
         });
         ffmpeg.unref()
+        systemLogger.trace(`ffmpeg実行完了 => ffmpeg:${ffmpeg}`)
         return ffmpeg.pid
     }
 }
