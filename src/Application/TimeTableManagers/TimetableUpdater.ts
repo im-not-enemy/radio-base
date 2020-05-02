@@ -14,11 +14,20 @@ export default class TimetableUpdater {
         // 必要な情報を抽出する
         // 時刻表に書き込む
         const newPrograms:Array<{[key:string]:any}> = []
+
         for (let i=0; i<7; i++){
             const date = parseInt(moment(new Date()).add(i, 'd').format('YYYYMMDD'))
             if (await this.timetable.countByDate(date) === 0) {
                 systemLogger.debug(`番組表ダウンロード => ${date}`)
                 const programsRawInfo = await this.radiko.getProgramsRawInfoByDate(date)
+                                              .catch((err)=>{
+                                                  systemLogger.error(err.statusCode,err.options.uri)
+                                              })
+
+                if (!programsRawInfo){
+                    systemLogger.error("programsRawInfo is undefined")
+                    break;
+                }
                 programsRawInfo.radiko.stations[0].station.forEach((station: any) => {
                     station.progs.forEach((programs: any) => {
                         programs.prog.forEach((program: any) => {
@@ -44,6 +53,5 @@ export default class TimetableUpdater {
             }
         }
         this.timetable.write(newPrograms)
-        // 一週間以上更新されていない情報を削除
     }
 }
