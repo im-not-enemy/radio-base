@@ -15,7 +15,7 @@ export default class TimetableUpdater {
         // 時刻表に書き込む
         const newPrograms:Array<{[key:string]:any}> = []
 
-        for (let i=0; i<7; i++){
+        for (let i=-1; i<7; i++){
             const date = parseInt(moment(new Date()).add(i, 'd').format('YYYYMMDD'))
             if (await this.timetable.countByDate(date) === 0) {
                 systemLogger.debug(`番組表ダウンロード => ${date}`)
