@@ -6,7 +6,8 @@
   "scripts": {
     "watch": "tsc -w",
     "start": "node lib/server.js",
-    "startd": "nodemon lib/server.js"
+    "start-dev": "nodemon lib/server.js",
+    "start-pro": "npx pm2 start lib/server.js"
   },
   "keywords": [],
   "author": "",
