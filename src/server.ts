@@ -42,6 +42,10 @@ app.use(cors())
 
 app.get('/',(req,res)=>res.send('Hello world!'))
 
+app.get('/stations',async(req,res)=>{
+    res.send(await radiko.getStationsRawInfo())
+})
+
 app.get('/timetable',async(req,res)=>{
     const now = moment(new Date()).format('YYYYMMDDHHmmss')
     const option = requestQueryParser.run(req.query)
