@@ -107,6 +107,13 @@ app.delete('/timetable/:id/_reservation',async(req,res)=>{
     }
 })
 
+app.get('/timetable/:id/_download',async(req,res)=>{
+    const data = await timetable.findById(parseInt(req.params.id),{station:1,title:1,startTime:1})
+    const file = `${data[0].station}_${data[0].title}_${data[0].startTime}.aac`
+    const fullPath = `${__dirname}/../${settings.directories.outputDir}/${file}`
+    res.download(fullPath)
+})
+
 app.listen(port, () => systemLogger.info(`サーバー起動 => port:${port}`))
 
 
