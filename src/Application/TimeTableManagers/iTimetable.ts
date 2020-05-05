@@ -7,4 +7,5 @@ export default interface iTimetable{
     countByDate(date:number):Promise<number>
     findById(id:number,option:{[key:string]:any}):Promise<{[key:string]:any}>
     findByStatus(status:string):Promise<{[key:string]:any}>
+    removeById(id:number):void
 }

@@ -17,6 +17,7 @@ import EnvironmentChecker from './Application/Server/EnvironmentChecker'
 import DirectoryMaker from './Application/Server/DirectoryMaker'
 import moment from 'moment'
 import cors from 'cors'
+import fs from 'fs'
 
 const requestQueryParser = new RequestQueryParser()
 const requestBodyParser = new RequestBodyParser()
@@ -112,6 +113,26 @@ app.get('/audio/:id/_download',async(req,res)=>{
     const file = `${data[0].station}_${data[0].title}_${data[0].startTime}.aac`
     const fullPath = `${__dirname}/../${settings.directories.outputDir}/${file}`
     res.download(fullPath)
+})
+
+app.delete('/audio/:id',async(req,res)=>{
+    const data = await timetable.findById(parseInt(req.params.id),{station:1,title:1,startTime:1})
+
+    if (data.length === 0){
+        res.sendStatus(404) 
+    } else {
+        const file = `${data[0].station}_${data[0].title}_${data[0].startTime}.aac`
+        const fullPath = `${__dirname}/../${settings.directories.outputDir}/${file}`
+        fs.unlink(fullPath,(err)=>{
+            if (err){
+                systemLogger.error(err?.message)
+                res.sendStatus(500)
+            } else {
+                timetable.removeById(parseInt(req.params.id))
+                res.sendStatus(200)
+            }
+        })
+    }
 })
 
 app.listen(port, () => systemLogger.info(`サーバー起動 => port:${port}`))

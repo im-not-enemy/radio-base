@@ -28,6 +28,10 @@ export default class Timetable implements iTimetable{
         return await db.find({status:status},{id:1,_id:0}).sort({id:1}).execAsync()
     }
 
+    public removeById(id:number):void{
+        return db.remove({id:id},{})
+    }
+
     public overwrite(id:number,newDoc:{[key:string]:any}):void{
         db.update({id:id},{$set:newDoc})
     }
