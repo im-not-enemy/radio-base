@@ -1,3 +1,4 @@
+import iReservationService from './iReservationService'
 import Timetable from '../TimeTableManagers/iTimetable'
 import TimeitableOverWriter from '../TimeTableManagers/TimetableOverWriter'
 import ScheduleNote from '../ScheduleManagers/iScheduleNote'
@@ -10,7 +11,7 @@ import TapeRecorder from '../TapeRecorder/TapeRecorder'
 import NodeScheduler from '../ScheduleManagers/NodeScheduler'
 import systemLogger from '../../Adapter/Logger'
 
-export default class ReservationService {
+export default class ReservationService implements iReservationService{
     private settings = require('../../../conf/settings.json')
     private programBuilder = new ProgramBuilder()
     private radiko = new Radiko('JP11')

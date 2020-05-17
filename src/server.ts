@@ -1,5 +1,6 @@
 import express from 'express';
 import Timetable from './Adapter/Timetable'
+import AutoReservationTable from './Adapter/AutoReservationTable'
 const settings = require('../conf/settings.json')
 
 import RequestQueryParser from './Application/Request/RequestQueryParser'
@@ -10,6 +11,7 @@ import TimetableOverWriter from './Application/TimeTableManagers/TimetableOverWr
 import NodeScheduler from './Application/ScheduleManagers/NodeScheduler'
 import ScheduleNote from './Adapter/ScheduleNote'
 import ReservationService from './Application/Services/ReservationService'
+import AutoReservationService from './Application/Services/AutoReservationService'
 import RecordingService from './Application/Services/RecordingService'
 import TimetableUpdater from './Application/TimeTableManagers/TimetableUpdater'
 import systemLogger from './Adapter/Logger'
@@ -24,10 +26,12 @@ const requestBodyParser = new RequestBodyParser()
 const scheduleNote = new ScheduleNote()
 const nodeScheduler = new NodeScheduler(scheduleNote)
 const timetable = new Timetable()
+const autoReservationTable = new AutoReservationTable()
 const radiko = new Radiko('JP11')
 const timetableOverWriter = new TimetableOverWriter(timetable)
 const reservationService = new ReservationService(timetable,scheduleNote)
 const recordingService = new RecordingService(timetable)
+const autoReservationService = new AutoReservationService(timetable,autoReservationTable,reservationService)
 const environmentChecker = new EnvironmentChecker()
 const directoryMaker = new DirectoryMaker()
 
@@ -108,6 +112,25 @@ app.delete('/timetable/:id/_reservation',async(req,res)=>{
     }
 })
 
+app.post('/timetable/:id/_autoReservation',async(req,res)=>{
+    await autoReservationService.register(parseInt(req.params.id),req.body)
+    autoReservationService.run()
+    res.sendStatus(200)
+})
+app.put('/timetable/:id/_autoReservation',async(req,res)=>{
+    await autoReservationService.update(parseInt(req.params.id),req.body)
+    autoReservationService.run()
+    res.sendStatus(200)
+})
+app.get('/timetable/:id/_autoReservation',async(req,res)=>{
+    const result = await autoReservationService.showSetting(parseInt(req.params.id))
+    res.send(result)
+})
+app.delete('/timetable/:id/_autoReservation',async(req,res)=>{
+    autoReservationService.cancel(parseInt(req.params.id))
+    res.sendStatus(200)
+})
+
 app.get('/audio/:id/_download',async(req,res)=>{
     const data = await timetable.findById(parseInt(req.params.id),{station:1,title:1,startTime:1})
     const file = `${data[0].station}_${data[0].title}_${data[0].startTime}.aac`
@@ -172,6 +195,11 @@ const everyMinutes = async():Promise<void> => {
         }
     })
 }
+const everyHours = async():Promise<void> => {
+    autoReservationService.run()
+}
+everyHours()
 
 nodeScheduler.activate({hour:6,minute:0,second:0},everySixAm)
 nodeScheduler.activate({second:0},everyMinutes)
+nodeScheduler.activate({minute:0,second:0},everyMinutes)
