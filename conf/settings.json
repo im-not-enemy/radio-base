@@ -2,5 +2,9 @@
     "directories": {
         "outputDir": "./out",
         "logDir": "./logs"
+    },
+    "notify": {
+        "command": "node script/lineNotifier.js",
+        "excute": false 
     }
 }

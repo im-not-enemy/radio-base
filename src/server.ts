@@ -192,6 +192,10 @@ const everyMinutes = async():Promise<void> => {
         if (endTime.isPast()) {
             systemLogger.debug(`録音完了番組検出 => id:${el.id} => newStatus:RECORDED`)
             timetableOverWriter.run(el.id,{status:'RECORDED'})
+            if (settings.notify.excute){
+                const {exec} = require('child_process');
+                exec(`${settings.notify.command} '${JSON.stringify(source[0])}'`)
+            }
         }
     })
 }
