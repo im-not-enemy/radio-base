@@ -15,6 +15,7 @@ import FavoriteService from './Application/Services/FavoriteService'
 import AutoReservationService from './Application/Services/AutoReservationService'
 import RecordingService from './Application/Services/RecordingService'
 import TimetableUpdater from './Application/TimeTableManagers/TimetableUpdater'
+import TimetableReducer from './Application/TimeTableManagers/TimetableReducer'
 import systemLogger from './Adapter/Logger'
 import EnvironmentChecker from './Application/Server/EnvironmentChecker'
 import DirectoryMaker from './Application/Server/DirectoryMaker'
@@ -191,7 +192,9 @@ start()
 const everySixAm = () => {
     systemLogger.info(`定刻処理開始。番組表更新`)
     const timetableUpdater = new TimetableUpdater(timetable, radiko)
+    const timetableReducer = new TimetableReducer(timetable)
     timetableUpdater.run()
+    timetableReducer.run()
 }
 everySixAm()
 

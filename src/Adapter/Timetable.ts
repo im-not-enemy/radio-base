@@ -43,5 +43,7 @@ export default class Timetable implements iTimetable{
     public async countByDate(date:number):Promise<number>{
         return await db.count({date:date}).execAsync()
     }
-    public eraseOldInfo(date:number):boolean{return true}
+    public eraseOldInfo(date:number):void{
+        db.remove({$and:[{date:{$lt:date}},{status:'DEFAULT'}]},{multi:true})
+    }
 }
