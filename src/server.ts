@@ -147,6 +147,7 @@ app.get('/audio/:id/_download',async(req,res)=>{
     const data = await timetable.findById(parseInt(req.params.id),{station:1,title:1,startTime:1})
     const file = `${data[0].station}_${data[0].title}_${data[0].startTime}.aac`
     const fullPath = `${__dirname}/../${settings.directories.outputDir}/${file}`
+    timetable.increment(parseInt(req.params.id),{downloaded:1})
     res.download(fullPath)
 })
 

@@ -47,6 +47,7 @@ export default class TimetableUpdater {
                             newProgram.url = program.url[0]
                             newProgram.img = program.img[0]
                             newProgram.favorite = false
+                            newProgram.downloaded = 0
                             newPrograms.push(newProgram)
                         })
                     })

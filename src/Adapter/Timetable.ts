@@ -35,6 +35,10 @@ export default class Timetable implements iTimetable{
     public overwrite(id:number,newDoc:{[key:string]:any}):void{
         db.update({id:id},{$set:newDoc})
     }
+    
+    public increment(id:number,increment:{[key:string]:any}):void{
+        db.update({id:id},{$inc:increment})
+    }
 
     public async countByDate(date:number):Promise<number>{
         return await db.count({date:date}).execAsync()
