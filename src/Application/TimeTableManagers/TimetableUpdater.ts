@@ -46,6 +46,7 @@ export default class TimetableUpdater {
                             newProgram.performer = program.pfm[0]
                             newProgram.url = program.url[0]
                             newProgram.img = program.img[0]
+                            newProgram.favorite = false
                             newPrograms.push(newProgram)
                         })
                     })

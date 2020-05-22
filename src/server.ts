@@ -11,6 +11,7 @@ import TimetableOverWriter from './Application/TimeTableManagers/TimetableOverWr
 import NodeScheduler from './Application/ScheduleManagers/NodeScheduler'
 import ScheduleNote from './Adapter/ScheduleNote'
 import ReservationService from './Application/Services/ReservationService'
+import FavoriteService from './Application/Services/FavoriteService'
 import AutoReservationService from './Application/Services/AutoReservationService'
 import RecordingService from './Application/Services/RecordingService'
 import TimetableUpdater from './Application/TimeTableManagers/TimetableUpdater'
@@ -31,6 +32,7 @@ const radiko = new Radiko('JP11')
 const timetableOverWriter = new TimetableOverWriter(timetable)
 const reservationService = new ReservationService(timetable,scheduleNote)
 const recordingService = new RecordingService(timetable)
+const favoriteService = new FavoriteService(timetable)
 const autoReservationService = new AutoReservationService(timetable,autoReservationTable,reservationService)
 const environmentChecker = new EnvironmentChecker()
 const directoryMaker = new DirectoryMaker()
@@ -91,6 +93,16 @@ app.post('/timetable/:id/_recording',async(req,res)=>{
 
 app.delete('/timetable/:id/_recording',async(req,res)=>{
     recordingService.stop(parseInt(req.params.id))
+    res.sendStatus(200)
+})
+
+app.post('/timetable/:id/_favorite',async(req,res)=>{
+    favoriteService.mark(parseInt(req.params.id))
+    res.sendStatus(200)
+})
+
+app.delete('/timetable/:id/_favorite',async(req,res)=>{
+    favoriteService.unmark(parseInt(req.params.id))
     res.sendStatus(200)
 })
 
