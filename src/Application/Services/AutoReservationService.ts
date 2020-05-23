@@ -105,7 +105,6 @@ export default class AutoReservationService {
             const condition = this.generateCondition(autoSettings[i].daysOfWeek)
             const targets = await this.timetable.find({$and:[{title:title},{timer:timer},{$or:condition},{status:'DEFAULT'}]},{id:1,_id:0})
             //予約録音サービス呼び出し
-            console.log(targets)
             for (let i in targets){
                 this.reservationService.register(targets[i].id)
                 systemLogger.info(`自動予約: ${targets[i].id}`)
