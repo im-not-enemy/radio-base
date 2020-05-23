@@ -11,14 +11,23 @@ export default class AutoReservationTable implements iAutoReservationTable {
     public write(newDoc:{[key:string]:any}):void{
         db.insert(newDoc)
     }
-    public removeByGroupId(groupId:number):void{
-        db.remove({groupId:groupId},{})
+    public removeBy_Id(_id:string):void{
+        db.remove({_id:_id},{})
     }
-    public async findByGroupId(groupId:number,option:{[key:string]:any}):Promise<{[key:string]:any}>{
-        return await db.find({groupId:groupId},option).sort({id:1}).execAsync()
+    public async countByTitle(title:RegExp):Promise<number>{
+        return await db.count({title:title}).execAsync()
+    }
+    public async countByHash(hash:string):Promise<number>{
+        return await db.count({hash:hash}).execAsync()
+    }
+    public async countBy_Id(_id:string):Promise<number>{
+        return await db.count({_id:_id}).execAsync()
+    }
+    public async countDuplicates(_id:string,hash:string){
+        return await db.count({$not:{_id:_id},hash:hash}).execAsync()
     }
     public async findAll():Promise<{[key:string]:any}>{
-        return await db.find({},{}).execAsync()
+        return await db.find({},{hash:0}).execAsync()
     }
     public update(query:{[key:string]:any},update:{[key:string]:any}):void {
         db.update(query,{$set:update})

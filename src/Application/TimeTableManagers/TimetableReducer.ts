@@ -8,7 +8,7 @@ export default class TimetableReducer {
         this.timetable = timetable
     }
     public run(){
-        const border = parseInt(moment().add(-7,'days').format('YYYYMMDD'))
+        const border = parseInt(moment().add(-6,'days').format('YYYYMMDD'))
         systemLogger.info(`delete info older than ${border}`)
         this.timetable.eraseOldInfo(border)
     }

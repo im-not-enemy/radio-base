@@ -1,7 +1,6 @@
 import TimeTable from './iTimetable'
 import Radiko from '../TapeRecorder/iRadiko'
 import moment from 'moment'
-import md5 from 'md5'
 import systemLogger from '../../Adapter/Logger'
 
 export default class TimetableUpdater {
@@ -40,12 +39,12 @@ export default class TimetableUpdater {
                             newProgram.dayOfWeek = moment(newProgram.date, 'YYYYMMDD').day()
                             newProgram.startTime = parseInt(program.$.ft)
                             newProgram.endTime = parseInt(program.$.to)
-                            newProgram.groupId = md5(`${newProgram.station}-${newProgram.title}-${String(newProgram.startTime).substr(-6, 6)}`)
                             newProgram.info = program.info[0]
                             newProgram.desc = program.desc[0]
                             newProgram.performer = program.pfm[0]
                             newProgram.url = program.url[0]
                             newProgram.img = program.img[0]
+                            newProgram.timer = program.$.ft.slice(-6)
                             newProgram.favorite = false
                             newProgram.downloaded = 0
                             newPrograms.push(newProgram)

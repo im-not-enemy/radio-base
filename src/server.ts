@@ -125,22 +125,36 @@ app.delete('/timetable/:id/_reservation',async(req,res)=>{
     }
 })
 
-app.post('/timetable/:id/_autoReservation',async(req,res)=>{
-    await autoReservationService.register(parseInt(req.params.id),req.body)
+app.post('/auto/reserve',async(req,res)=>{
+    const result = await autoReservationService.register(req.body)
+    if(result.succeed === false){
+        res.sendStatus(400)
+    } else {
+        res.sendStatus(200)
+    }
     autoReservationService.run()
-    res.sendStatus(200)
 })
-app.put('/timetable/:id/_autoReservation',async(req,res)=>{
-    await autoReservationService.update(parseInt(req.params.id),req.body)
+
+app.post('/auto/reserve/_test',async(req,res)=>{
+    const programs = await autoReservationService.test(req.body)
+    res.send(programs)
+})
+
+app.put('/auto/reserve/:_id',async(req,res)=>{
+    const result = await autoReservationService.update(req.params._id,req.body)
+    if (result.succeed){
+        res.sendStatus(200)
+    }else {
+        res.status(400).send(result)
+    }
     autoReservationService.run()
-    res.sendStatus(200)
 })
-app.get('/timetable/:id/_autoReservation',async(req,res)=>{
-    const result = await autoReservationService.showSetting(parseInt(req.params.id))
+app.get('/auto/reserve',async(req,res)=>{
+    const result = await autoReservationService.showSetting()
     res.send(result)
 })
-app.delete('/timetable/:id/_autoReservation',async(req,res)=>{
-    autoReservationService.cancel(parseInt(req.params.id))
+app.delete('/auto/reserve/:_id',async(req,res)=>{
+    autoReservationService.cancel(req.params._id)
     res.sendStatus(200)
 })
 
