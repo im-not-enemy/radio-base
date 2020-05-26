@@ -40,7 +40,8 @@ export default class AutoReservationService {
             date:1,dayOfWeek:1,
             status:1,station:1,
             startTime:1,endTime:1,
-            _id:0
+            performer:1,img:1,
+            _id:0,favorite:1
         }
         return await this.timetable.find(query,option)
     }
