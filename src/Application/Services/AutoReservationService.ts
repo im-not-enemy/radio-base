@@ -27,11 +27,11 @@ export default class AutoReservationService {
     public async test(body:{[key:string]:any}){
         if(!this.checkBody(body)) return {succeed: false}
 
-        const today = parseInt(moment().format('YYYYMMDD'))
+        const yesterday = parseInt(moment().add('days',-1).format('YYYYMMDD'))
         const query = {
             $or: this.generateCondition(body.daysOfWeek),
             title: new RegExp(body.title),
-            date: {$gte: today},
+            date: {$gte: yesterday},
             //status: "DEFAULT",
             timer: body.timer
         }
