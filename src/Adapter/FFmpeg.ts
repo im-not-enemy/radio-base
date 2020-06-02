@@ -7,7 +7,7 @@ export default class FFmpeg implements iFFmpeg{
     constructor(private radiko:Radiko, private outputDir:string, private logDir:string){}
 
     public async execute(station:string, duration:number, outputFileName:string):Promise<number>{
-        const output = `${this.outputDir}/${outputFileName}.m4a`
+        const output = `${this.outputDir}/${outputFileName}.mp3`
         const log = `${this.logDir}/${outputFileName}.log`
 
         const {spawn} = require('child_process');
