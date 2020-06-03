@@ -24,7 +24,7 @@ export default class FFmpeg implements iFFmpeg{
             stdio: ['ignore','ignore',fs.openSync(`${log}`, 'a')] 
         });
         ffmpeg.unref()
-        systemLogger.trace(`ffmpeg実行完了 => ffmpeg:${ffmpeg}`)
+        systemLogger.trace(`ffmpeg実行完了 => ffmpeg:${JSON.stringify(ffmpeg)}`)
         return ffmpeg.pid
     }
 }
