@@ -215,6 +215,7 @@ everySixAm()
 const everyMinutes = async():Promise<void> => {
     //DB検索: 録音中番組があるか > 録音中番組の放送終了時間は過ぎているか > ステータスをRECORDEDに変更
     const recordingPrograms = await timetable.findByStatus('RECORDING')
+    console.log(JSON.stringify(recordingPrograms))
     recordingPrograms.forEach(async(el:{id:number})=>{
         systemLogger.debug(`録音中番組検出 => id:${el.id}`)
         const source = await timetable.findById(el.id,{})
@@ -236,4 +237,4 @@ everyHours()
 
 nodeScheduler.activate({hour:6,minute:0,second:0},everySixAm)
 nodeScheduler.activate({second:0},everyMinutes)
-nodeScheduler.activate({minute:0,second:0},everyMinutes)
+nodeScheduler.activate({minute:0,second:0},everyHours)
