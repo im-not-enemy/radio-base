@@ -5,12 +5,13 @@ import RecordingService from '../Services/RecordingService'
 
 export default class ReservationBot {
     constructor(private program:Program, private nodeScheduler:NodeScheduler,private timetable:Timetable){}
-
+    
     public register():{[key:string]:any}{
-        const requestRecording = () => {
+        const requestRecording = async() => {
             const id = parseInt(this.program.toStringId())
             const recordingService = new RecordingService(this.timetable)
-            recordingService.start(id)
+            const delay = 15000
+            new Promise((res,err) => setTimeout(()=>{recordingService.start(id)},delay))
         }
         //開始可否判定
         const result = this.program.canStartReservation()
