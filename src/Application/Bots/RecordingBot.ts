@@ -12,10 +12,11 @@ export default class RecordingBot {
     constructor(private program:Program){}
 
     public async start():Promise<{[key:string]:any}>{
+        const delay = 15
         const result = this.program.canStartRecording()
         if (result.succeed === false) return result
         this.tapeRecorder.tuneTo(this.program.toStringStation())
-        this.tapeRecorder.setTimer(this.program.calculateDuration())
+        this.tapeRecorder.setTimer(this.program.calculateDuration()+delay)
         this.tapeRecorder.writeNameToTape(`${this.program.toStringStation()}_${this.program.toStringTitle()}_${this.program.toStringStartTime()}`)
         await this.tapeRecorder.pushStartButton()
         return result
