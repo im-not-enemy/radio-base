@@ -67,7 +67,7 @@ app.get('/stations/v2',async(req,res)=>{
         })
     }
     stations.push({
-        id: "NHK-R2",
+        id: "JOAK-R2",
         name: "NHKラジオ第2（東京）",
         logo: "https://www.nhk.or.jp/common/img/media/r2-200x100.png"
     })
