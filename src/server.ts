@@ -6,6 +6,7 @@ const settings = require('../conf/settings.json')
 import RequestQueryParser from './Application/Request/RequestQueryParser'
 import RequestBodyParser from './Application/Request/RequestBodyParser'
 import Radiko from './Adapter/Radiko'
+import Rajiru from './Adapter/Rajiru'
 import Time from './Application/Program/Time'
 import TimetableOverWriter from './Application/TimeTableManagers/TimetableOverWriter'
 import NodeScheduler from './Application/ScheduleManagers/NodeScheduler'
@@ -30,6 +31,7 @@ const nodeScheduler = new NodeScheduler(scheduleNote)
 const timetable = new Timetable()
 const autoReservationTable = new AutoReservationTable()
 const radiko = new Radiko('JP11')
+const rajiru = new Rajiru()
 const timetableOverWriter = new TimetableOverWriter(timetable)
 const reservationService = new ReservationService(timetable,scheduleNote)
 const recordingService = new RecordingService(timetable)
@@ -205,7 +207,7 @@ start()
 //////// 定刻処理 ////////
 const everySixAm = () => {
     systemLogger.info(`定刻処理開始。番組表更新`)
-    const timetableUpdater = new TimetableUpdater(timetable, radiko)
+    const timetableUpdater = new TimetableUpdater(timetable, radiko, rajiru)
     const timetableReducer = new TimetableReducer(timetable)
     timetableUpdater.run()
     timetableReducer.run()

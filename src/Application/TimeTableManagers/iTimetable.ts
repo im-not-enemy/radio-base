@@ -10,4 +10,5 @@ export default interface iTimetable{
     findByStatus(status:string):Promise<{[key:string]:any}>
     removeById(id:number):void
     eraseOldInfo(id:number):void
+    count(date:number,src:string):Promise<number>
 }

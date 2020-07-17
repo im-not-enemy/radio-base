@@ -1,10 +1,11 @@
 import TimeTable from './iTimetable'
 import Radiko from '../TapeRecorder/iRadiko'
+import Rajiru from '../TapeRecorder/iRajiru'
 import moment from 'moment'
 import systemLogger from '../../Adapter/Logger'
 
 export default class TimetableUpdater {
-    constructor(private timetable: TimeTable, private radiko: Radiko) { }
+    constructor(private timetable: TimeTable, private radiko: Radiko, private rajiru: Rajiru) { }
     public async run():Promise<void> {
         // 一週間の日付を確認
         // 足りない情報があるか？
@@ -15,19 +16,19 @@ export default class TimetableUpdater {
         const newPrograms:Array<{[key:string]:any}> = []
 
         for (let i=-1; i<7; i++){
-            const date = parseInt(moment(new Date()).add(i, 'd').format('YYYYMMDD'))
-            if (await this.timetable.countByDate(date) === 0) {
-                systemLogger.debug(`番組表ダウンロード => ${date}`)
-                const programsRawInfo = await this.radiko.getProgramsRawInfoByDate(date)
+            let date = parseInt(moment(new Date()).add(i, 'd').format('YYYYMMDD'))
+            if (await this.timetable.count(date,"radiko") === 0) {
+                systemLogger.debug(`番組表ダウンロード[radiko] => ${date}`)
+                const radikoProgramsRawInfo = await this.radiko.getProgramsRawInfoByDate(date)
                                               .catch((err)=>{
                                                   systemLogger.error(err.statusCode,err.options.uri)
                                               })
 
-                if (!programsRawInfo){
-                    systemLogger.error("programsRawInfo is undefined")
+                if (!radikoProgramsRawInfo){
+                    systemLogger.error("programsRawInfo is undefined (radiko)")
                     break;
                 }
-                programsRawInfo.radiko.stations[0].station.forEach((station: any) => {
+                radikoProgramsRawInfo.radiko.stations[0].station.forEach((station: any) => {
                     station.progs.forEach((programs: any) => {
                         programs.prog.forEach((program: any) => {
                             let newProgram: { [key: string]: any } = {}
@@ -47,9 +48,47 @@ export default class TimetableUpdater {
                             newProgram.timer = program.$.ft.slice(-6)
                             newProgram.favorite = false
                             newProgram.downloaded = 0
+                            newProgram.src = "radioko"
                             newPrograms.push(newProgram)
                         })
                     })
+                })
+            }
+
+            if (await this.timetable.count(date,"rajiru") === 0) {
+                const dateString = moment().add(i+1,'d').format('YYYY-MM-DD')
+                systemLogger.debug(`番組表ダウンロード[rajiru] => ${dateString}`)
+                const rajiruProgramsRawInfo = await this.rajiru.getProgramsRawInfoByDate(dateString)
+
+                if (!rajiruProgramsRawInfo){
+                    systemLogger.error("programsRawInfo is undefined (rajiru)")
+                    break;
+                }
+
+                rajiruProgramsRawInfo.forEach((program:any)=>{
+                    const startTime = moment(program.start_time)
+                    const endTime = moment(program.end_time)
+                    const timer = endTime.diff(startTime,'seconds')
+                    const newProgram = {
+                        id: program.id,
+                        title: program.title,
+                        station: "JOAK-R2",
+                        status: "DEFAULT",
+                        date: parseInt(startTime.format('YYYYMMDD')),
+                        dayOfWeek: startTime.day(),
+                        startTime: parseInt(startTime.format('YYYYMMDDHHmmss')),
+                        endTime: parseInt(endTime.format('YYYYMMDDHHmmss')),
+                        info: program.subtitle,
+                        desc: "",
+                        performer: program.act,
+                        url: "",
+                        img: program.service.logo_m.url,
+                        timer: timer,
+                        favorite: false,
+                        downloaded: 0,
+                        src: "rajiru"
+                    }
+                    newPrograms.push(newProgram)
                 })
             }
         }
