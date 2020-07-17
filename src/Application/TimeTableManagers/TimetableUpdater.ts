@@ -70,7 +70,7 @@ export default class TimetableUpdater {
                     const endTime = moment(program.end_time)
                     const timer = endTime.diff(startTime,'seconds')
                     const newProgram = {
-                        id: program.id,
+                        id: parseInt(program.id),
                         title: program.title,
                         station: "JOAK-R2",
                         status: "DEFAULT",
