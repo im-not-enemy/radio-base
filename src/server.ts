@@ -55,6 +55,24 @@ app.get('/',(req,res)=>res.send('Hello world!'))
 app.get('/stations',async(req,res)=>{
     res.send(await radiko.getStationsRawInfo())
 })
+app.get('/stations/v2',async(req,res)=>{
+    const raw = await radiko.getStationsRawInfo()
+    const origin = raw.stations.station
+    const stations = Array()
+    for (let i=0; i<origin.length; i++){
+        stations.push({
+            id: origin[i].id[0],
+            name: origin[i].name[0],
+            logo: origin[i].logo[0]._
+        })
+    }
+    stations.push({
+        id: "NHK-R2",
+        name: "NHKラジオ第2（東京）",
+        logo: "https://www.nhk.or.jp/common/img/media/r2-200x100.png"
+    })
+    res.send(stations)
+})
 
 app.get('/timetable',async(req,res)=>{
     const now = moment(new Date()).format('YYYYMMDDHHmmss')
