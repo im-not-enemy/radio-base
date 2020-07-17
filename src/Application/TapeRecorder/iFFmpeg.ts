@@ -1,3 +1,3 @@
 export default interface iFFmpeg {
-    execute(station:string, duration:number, outputFileName:string):Promise<number>
+    execute(station:string, duration:number, outputFileName:string, target:string):Promise<number>
 }

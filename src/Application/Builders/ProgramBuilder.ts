@@ -13,6 +13,6 @@ export default class ProgramBuilder {
         const status = new Status(source.status)
         const startTime = new Time(source.startTime)
         const endTime = new Time(source.endTime)
-        return new Program(id, station, title, status, startTime, endTime)
+        return new Program(id, station, title, status, startTime, endTime, source.src)
     }
 }

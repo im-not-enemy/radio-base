@@ -48,7 +48,7 @@ export default class TimetableUpdater {
                             newProgram.timer = program.$.ft.slice(-6)
                             newProgram.favorite = false
                             newProgram.downloaded = 0
-                            newProgram.src = "radioko"
+                            newProgram.src = "radiko"
                             newPrograms.push(newProgram)
                         })
                     })

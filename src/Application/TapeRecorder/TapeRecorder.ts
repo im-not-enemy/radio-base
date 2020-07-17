@@ -21,9 +21,9 @@ export default class TapeRecorder implements iTapeRecorder{
         //ファイル名登録
         this.tape = name
     }
-    public async pushStartButton():Promise<void>{
+    public async pushStartButton(target:string):Promise<void>{
         //ffmpeg実行
-        this.pid = await this.ffmpeg.execute(this.station, this.duration, this.tape)
+        this.pid = await this.ffmpeg.execute(this.station, this.duration, this.tape, target)
     }
     public pushStopButton():boolean{
         if (!this.pid) return false

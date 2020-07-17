@@ -6,6 +6,7 @@ import ProgramBuilder from '../Builders/ProgramBuilder'
 import RecordingBot from '../Bots/RecordingBot'
 import ReservationBot from '../Bots/ReservationBot'
 import Radiko from '../../Adapter/Radiko'
+import Rajiru from '../../Adapter/Rajiru'
 import FFmpeg from '../../Adapter/FFmpeg'
 import TapeRecorder from '../TapeRecorder/TapeRecorder'
 import NodeScheduler from '../ScheduleManagers/NodeScheduler'
@@ -15,7 +16,8 @@ export default class ReservationService implements iReservationService{
     private settings = require('../../../conf/settings.json')
     private programBuilder = new ProgramBuilder()
     private radiko = new Radiko('JP11')
-    private ffmpeg = new FFmpeg(this.radiko, this.settings.outputDir, this.settings.logDir)
+    private rajiru = new Rajiru()
+    private ffmpeg = new FFmpeg(this.radiko, this.rajiru, this.settings.outputDir, this.settings.logDir)
     private tapeRecorder = new TapeRecorder(this.ffmpeg) 
     private nodeScheduler:NodeScheduler
     private timetableOverWriter:TimeitableOverWriter

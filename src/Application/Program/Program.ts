@@ -6,7 +6,7 @@ import Time from './iTime'
 import iProgram from './iProgram'
 
 export default class Program implements iProgram{
-    constructor(private id:Id, private station:Station, private title:Title, private status:Status, private startTime:Time, private endTime:Time){}
+    constructor(private id:Id, private station:Station, private title:Title, private status:Status, private startTime:Time, private endTime:Time, private src:string){}
 
     public canStartRecording():{[key:string]:any}{
         if (this.status.isRecording()) return {succeed:false, reason:'This program is already recording.'}
@@ -44,5 +44,8 @@ export default class Program implements iProgram{
     }
     public toStringId():string{
         return this.id.toString()
+    }
+    public toStringSrc():string{
+        return this.src
     }
 }

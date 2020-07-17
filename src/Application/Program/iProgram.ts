@@ -8,4 +8,5 @@ export default interface iProgram {
     toStringStartTime():string
     toObjectStartTime():{[key:string]:any}
     toStringId():string
+    toStringSrc():string
 }
