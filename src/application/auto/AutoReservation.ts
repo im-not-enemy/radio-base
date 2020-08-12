@@ -83,12 +83,12 @@ export default class AutoReservationService {
         const settings = await this.autoReservationTable.show()
         for (let i in settings){
             const title = new RegExp(settings[i].title)
-            const time = new RegExp(settings[i].time)
+            const time = settings[i].time
             const condition = this.generateCondition(settings[i].daysOfWeek)
-            const targets = await this.timetable.find({$and:[{title:title},{timer:time},{$or:condition},{status:'DEFAULT'}]},{id:1,_id:0})
+            const targets = await this.timetable.find({$and:[{title:title},{"start.time":time},{$or:condition},{status:'DEFAULT'}]},{id:1,_id:0})
             //予約録音サービス呼び出し
             for (let i in targets){
-                axios.post(`http://localhost:3000/timetable/${targets[i].id}`)
+                axios.post(`http://localhost:3000/timetable/${targets[i].id}/reserve`).then((res)=>{console.log(res)})
                 systemLogger.info(`自動予約: ${targets[i].id}`)
             }
         }   
