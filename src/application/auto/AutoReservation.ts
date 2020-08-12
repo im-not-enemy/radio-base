@@ -75,7 +75,7 @@ export default class AutoReservationService {
                 hash: hash
             })
         }
-        return {result:true,programs:programs} 
+        return {succeed:true,programs:programs} 
     }
 
     public async run(){

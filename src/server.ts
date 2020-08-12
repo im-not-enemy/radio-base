@@ -163,9 +163,12 @@ app.post('/auto/reserve',async(req,res)=>{
     const auto = new AutoReservation(timetable,autoReservationTable)
 
     let result
-    req.query.hasOwnProperty('dryrun')
-    ? result = await auto.register(req.body,true)
-    : result = await auto.register(req.body,false)
+    if (req.query.hasOwnProperty('dryrun')){
+        result = await auto.register(req.body,true)
+    } else {
+        result = await auto.register(req.body,false)
+        auto.run()
+    }
 
     if (result.succeed){
         res.send(result.programs)
@@ -178,9 +181,12 @@ app.put('/auto/reserve/:id',async(req,res)=>{
     const auto = new AutoReservation(timetable,autoReservationTable)
 
     let result
-    req.query.hasOwnProperty('dryrun')
-    ? result = await auto.update(parseInt(req.params.id),req.body,true)
-    : result = await auto.update(parseInt(req.params.id),req.body,false)
+    if (req.query.hasOwnProperty('dryrun')){
+        result = await auto.update(parseInt(req.params.id),req.body,true)
+    } else {
+        result = await auto.update(parseInt(req.params.id),req.body,false)
+        auto.run()
+    }
 
     if (result.succeed){
         res.send(result.programs)
