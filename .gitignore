@@ -1,1 +1,6 @@
-./dist
+old
+logs
+dist
+database
+node_modules
+output
