@@ -49,8 +49,10 @@ nodeSchedule.setEveryMinute(async()=>{
     const recordingPrograms = await timetable.find({status:"RECORDING"},{id:1,title:1,station:1,status:1,startTime:1,endTime:1,recording:1,_id:0})
     systemLogger.debug(`録音中番組: ${JSON.stringify(recordingPrograms)}`)
     recordingPrograms.forEach((program:{[key:string]:any}) => {
-        if (program.endTime < now) timetable.recorded(program.id)
-        systemLogger.debug(`録音完了: ${JSON.stringify(program)}`)
+        if (program.endTime < now){
+            timetable.recorded(program.id)
+            systemLogger.debug(`録音完了: ${JSON.stringify(program)}`)
+        }
     });
 })
 
@@ -112,7 +114,8 @@ app.post('/timetable/:id/record',async(req,res)=>{
     const program = new Program(src[0])
     const canStart = program.canStartRecording()
     if (canStart.result){
-        const recording = new Recording(new FFmpeg(),timetable)
+        const site = sites.find((site) => {if (site.siteId === program.site){return site}})
+        const recording = new Recording(new FFmpeg(),timetable,site)
         recording.start(program)
         res.sendStatus(200)
     }else{
@@ -125,7 +128,8 @@ app.delete('/timetable/:id/record',async(req,res)=>{
     const program = new Program(src[0])
     const canStop = program.canStopRecording()
     if (canStop.result){
-        const recording = new Recording(new FFmpeg(),timetable)
+        const site = sites.find((site) => {if (site.siteId === program.site){return site}})
+        const recording = new Recording(new FFmpeg(),timetable,site)
         recording.stop(program)
         res.sendStatus(200)
     }else{

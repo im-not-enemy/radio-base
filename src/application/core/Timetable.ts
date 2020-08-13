@@ -41,7 +41,7 @@ export default class Timetable implements iTimetable{
         this.nedb.update(id,{status:"RECORDING",recording:{pid:pid}})
     }
     public recorded(id:number){
-        this.nedb.update(id,{status:"RECORDED",reording:{pid:"-"}})
+        this.nedb.update(id,{status:"RECORDED",recording:{pid:"-"}})
     }
     public reserved(id:number){
         this.nedb.update(id,{status:"RESERVED"})
