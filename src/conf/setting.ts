@@ -1,10 +1,17 @@
 export default {
     "express": {
+        "host": "http://localhost",
         "port": 3000
     },
     "logger": {
         "loglevel": "debug",
         "logfile": "logs/radio-base.log"
+    },
+    "notifier": {
+        "line": {
+            "token": '',
+            "destination": ''
+        }
     },
     "ffmpeg": {
         "outputDir": "./output",

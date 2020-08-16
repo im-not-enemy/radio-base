@@ -3,6 +3,7 @@ import axios from 'axios'
 import systemLogger from '../../common/logger'
 import iProgram from '../../entities/iProgaram'
 import iTimetable from './iTimetable'
+import settings from '../../conf/setting'
 
 export default class Recording {
     private timer: iTimer
@@ -14,7 +15,7 @@ export default class Recording {
     }
     public register(program:iProgram){
         systemLogger.debug(`録音予約 => ${JSON.stringify(program.title)}_${program.startTime}`)
-        const func = () => {axios.post(`http://localhost:3000/timetable/${program.id}/_recording`)}
+        const func = () => {axios.post(`${settings.express.host}:${settings.express.port}/timetable/${program.id}/record`)}
         this.timer.set(program.id,program.startTime,func)
         this.timetable.reserved(program.id)
     }

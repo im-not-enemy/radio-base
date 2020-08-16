@@ -6,16 +6,19 @@ import NeDB from './adapter/databases/NeDB'
 import Timetable from './application/core/Timetable'
 import Stations from './application/core/Stations'
 import AutoReservationTable from './application/auto/AutoReservationTable'
+import WatchTable from './application/auto/WatchTable'
 import Radiko from './adapter/sites/Radiko'
 import Rajiru from './adapter/sites/Rajiru'
 import QueryParser from './application/request/QueryParser'
 import BodyParser from './application/request/BodyParser'
 import Recording from './application/core/Recording'
 import Reservation from './application/core/Reservation'
+import AutoReservation from './application/auto/AutoReservation'
+import Watch from './application/auto/Watch'
 import FFmpeg from './adapter/commands/FFmpeg'
 import NodeSchedule from './adapter/schedule/NodeSchedule'
 import Program from './entities/Program'
-import AutoReservation from './application/auto/AutoReservation'
+import Line from './adapter/notifier/Line'
 
 const sites = new Array()
 settings.sites.find((s)=>{
@@ -29,6 +32,7 @@ settings.sites.find((s)=>{
 const timetable = new Timetable(new NeDB('timetable'), sites)
 const stations = new Stations(new NeDB('stations'), sites)
 const autoReservationTable = new AutoReservationTable(new NeDB('autoReservation'))
+const watchTable = new WatchTable(new NeDB('watch'))
 const nodeSchedule = new NodeSchedule();
 
 /* -------------- 起動 -------------- */
@@ -44,6 +48,11 @@ timetable.reload()
 stations.reload()
 
 /* -------------- 定刻 -------------- */
+nodeSchedule.setEveryDay(()=>{
+    const watch = new Watch(watchTable,timetable)
+    watch.run()
+})
+
 nodeSchedule.setEveryMinute(async()=>{
     const now = parseInt(moment().format('YYYYMMDDHHmmss'))
     const recordingPrograms = await timetable.find({status:"RECORDING"},{id:1,title:1,station:1,status:1,startTime:1,endTime:1,recording:1,_id:0})
@@ -52,6 +61,7 @@ nodeSchedule.setEveryMinute(async()=>{
         if (program.endTime < now){
             timetable.recorded(program.id)
             systemLogger.debug(`録音完了: ${JSON.stringify(program)}`)
+            new Line().notifyReorded(program)
         }
     });
 })
@@ -210,6 +220,29 @@ app.delete('/auto/reserve/:id',async(req,res)=>{
     const auto = new AutoReservation(timetable,autoReservationTable)
     auto.cancel(parseInt(req.params.id))
     res.sendStatus(200)
+})
+app.get('/auto/watch',async(req,res)=>{
+    const watch = new Watch(watchTable,timetable)
+    res.send(await watch.dryrun())
+})
+app.get('/auto/watch/word',async(req,res)=>{
+    const watch = new Watch(watchTable,timetable)
+    res.send(await watch.show())
+})
+app.post('/auto/watch/word',async(req,res)=>{
+    const watch = new Watch(watchTable,timetable)
+    watch.register(req.query.word)
+    res.send(200)
+})
+app.delete('/auto/watch/word/:id',async(req,res)=>{
+    const watch = new Watch(watchTable,timetable)
+    watch.cancel(parseInt(req.params.id))
+    res.send(200)
+})
+app.put('/auto/watch/word/:id',async(req,res)=>{
+    const watch = new Watch(watchTable,timetable)
+    watch.update(parseInt(req.params.id),req.query.word)
+    res.send(200)
 })
 app.get('/audio/:id/download',async(req,res)=>{
     const data = await timetable.findById(parseInt(req.params.id),{station:1,title:1,startTime:1})

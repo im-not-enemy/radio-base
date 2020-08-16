@@ -4,6 +4,7 @@ import moment from 'moment'
 import iTimetable from '../core/iTimetable'
 import systemLogger from '../../common/logger'
 import iAutoReservationTable from './iAutoReservationTable'
+import settings from '../../conf/setting'
 
 export default class AutoReservationService {
     constructor(private timetable:iTimetable, private autoReservationTable:iAutoReservationTable){}
@@ -88,7 +89,7 @@ export default class AutoReservationService {
             const targets = await this.timetable.find({$and:[{title:title},{"start.time":time},{$or:condition},{status:'DEFAULT'}]},{id:1,_id:0})
             //予約録音サービス呼び出し
             for (let i in targets){
-                axios.post(`http://localhost:3000/timetable/${targets[i].id}/reserve`).then((res)=>{console.log(res)})
+                axios.post(`${settings.express.host}:${settings.express.port}/timetable/${targets[i].id}/reserve`).then((res)=>{console.log(res)})
                 systemLogger.info(`自動予約: ${targets[i].id}`)
             }
         }   
