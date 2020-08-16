@@ -19,6 +19,7 @@ import FFmpeg from './adapter/commands/FFmpeg'
 import NodeSchedule from './adapter/schedule/NodeSchedule'
 import Program from './entities/Program'
 import Line from './adapter/notifier/Line'
+import cors from 'cors'
 
 const sites = new Array()
 settings.sites.find((s)=>{
@@ -78,6 +79,7 @@ const queryParser = new QueryParser()
 const bodyParser = new BodyParser()
 
 app.use(express.json())
+app.use(cors())
 app.listen(port, () => systemLogger.debug(`サーバー起動 => port:${port}`))
 
 app.get('/',(req,res)=>{
